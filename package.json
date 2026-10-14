@@ -1,0 +1,25 @@
+{
+  "name": "campus-ride-pooling",
+  "version": "1.0.0",
+  "description": "DBMS Course Final Project - Campus Ride-Pooling System",
+  "private": true,
+  "scripts": {
+    "db:start": "powershell -ExecutionPolicy Bypass -File ./db/scripts/pg-ctl.ps1 start",
+    "db:stop": "powershell -ExecutionPolicy Bypass -File ./db/scripts/pg-ctl.ps1 stop",
+    "db:status": "powershell -ExecutionPolicy Bypass -File ./db/scripts/pg-ctl.ps1 status",
+    "db:migrate": "node ./db/scripts/run-migrations.js",
+    "db:seed": "node ./db/scripts/run-seed.js",
+    "db:verify": "node ./db/scripts/verify-db.js",
+    "db:explain": "node ./db/scripts/explain-analyze.js",
+    "test:concurrency": "node ./backend/dist/scripts/test-concurrency.js",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

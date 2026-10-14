@@ -1,0 +1,40 @@
+================================================================================
+   CAMPUS RIDE-POOLING: CONCURRENCY & TRANSACTION ISOLATION STRESS TEST         
+================================================================================
+Test Timestamp: 2026-10-14T14:38:38.893Z
+Target Ride ID: 33333333-3333-3333-3333-333333333399
+Ride Capacity: 3 seats
+Simultaneous Booking Requests: 50
+Locking Mechanism: Stored Function book_seat() with SELECT ... FOR UPDATE
+
+Dispatching 50 simultaneous requests concurrently via Promise.all...
+All 50 requests completed in 471ms.
+
+  [SUCCESS 201] Rider 1 (concurrency.rider.1@vitstudent.ac.in) booked seat -> Booking ID: b910b5b6-165d-46be-b0c5-606af0f24a75
+  [SUCCESS 201] Rider 2 (concurrency.rider.2@vitstudent.ac.in) booked seat -> Booking ID: cdc8ec20-c135-475a-9fb5-d9dfece2ac24
+  [SUCCESS 201] Rider 26 (concurrency.rider.26@vitstudent.ac.in) booked seat -> Booking ID: c49ce163-96a0-4c68-a83c-7a1e2bc087de
+
+Concurrency Test Summary:
+  - Total Requests:      50
+  - Successful Bookings: 3 (Expected: 3)
+  - Rejected (Full):     47 (Expected: 47)
+  - Unexpected Errors:   0 (Expected: 0)
+
+Post-Test Database State Verification:
+  - DB seats_available:  0 (Expected: 0)
+  - DB total_seats:      3
+  - DB bookings count:   3 (Expected: 3)
+  -> OVERBOOKING CHECK: PASSED (Zero overbooking under heavy race conditions)
+
+--------------------------------------------------------------------------------
+IDEMPOTENCY TEST: Submitting same Idempotency-Key twice
+--------------------------------------------------------------------------------
+1st Call with Idempotency-Key: idem-test-fixed-1791988719490
+  -> 1st Call Status: 201, idempotent_replay: false, Booking ID: d5888396-338c-48e9-ada0-07136cb3c509
+2nd Call with identical Idempotency-Key: idem-test-fixed-1791988719490
+  -> 2nd Call Status: 200, idempotent_replay: true, Booking ID: d5888396-338c-48e9-ada0-07136cb3c509
+  -> IDEMPOTENCY CHECK: PASSED (Returned identical booking, zero duplicate rows inserted)
+
+================================================================================
+               ALL CONCURRENCY & IDEMPOTENCY TESTS PASSED!                      
+================================================================================
