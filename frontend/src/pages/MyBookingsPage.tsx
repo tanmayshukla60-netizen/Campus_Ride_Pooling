@@ -159,6 +159,9 @@ export const MyBookingsPage: React.FC = () => {
                     <button
                       onClick={() => setPayingBooking({
                         id: b.ride_id,
+                        booking_id: b.booking_id,
+                        seats_booked: b.seats_booked,
+                        hold_expires_at: b.hold_expires_at,
                         origin_stop_name: b.origin_stop_name,
                         destination_stop_name: b.destination_stop_name,
                         departure_time: b.departure_time,

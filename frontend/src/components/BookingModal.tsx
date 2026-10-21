@@ -3,8 +3,9 @@ import { apiRequest } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import {
   X, Clock, CreditCard, CheckCircle, AlertCircle,
-  ShieldCheck, Timer, Zap, Users,
+  ShieldCheck, Timer, Zap, Users, QrCode
 } from 'lucide-react';
+import { MockQrScanner } from './MockQrScanner';
 
 interface BookingModalProps {
   ride: any;
@@ -13,7 +14,7 @@ interface BookingModalProps {
   onBookingConfirmed: () => void;
 }
 
-type Step = 'PREVIEW' | 'HOLDING' | 'PAYING' | 'CONFIRMED' | 'ERROR';
+type Step = 'PREVIEW' | 'HOLDING' | 'QR_PAYMENT' | 'PAYING' | 'CONFIRMED' | 'ERROR';
 
 export const BookingModal: React.FC<BookingModalProps> = ({ ride, isOpen, onClose, onBookingConfirmed }) => {
   const { user } = useAuth();
@@ -31,6 +32,20 @@ export const BookingModal: React.FC<BookingModalProps> = ({ ride, isOpen, onClos
   useEffect(() => {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, []);
+
+  useEffect(() => {
+    if (ride?.booking_id) {
+      setBookingData({ booking_id: ride.booking_id, hold_expires_at: ride.hold_expires_at });
+      setSeatsToBook(ride.seats_booked || 1);
+      setStep('HOLDING');
+      if (ride.hold_expires_at) {
+        startCountdown(ride.hold_expires_at);
+      }
+    } else {
+      setStep('PREVIEW');
+      setBookingData(null);
+    }
+  }, [ride]);
 
   const startCountdown = (expiresAt: string) => {
     const expiry = new Date(expiresAt).getTime();
@@ -234,23 +249,27 @@ export const BookingModal: React.FC<BookingModalProps> = ({ ride, isOpen, onClos
               </div>
 
               <button
-                onClick={handlePayment}
-                disabled={loading}
-                className="btn-coral w-full py-3.5 text-sm flex items-center justify-center gap-2"
+                onClick={() => setStep('QR_PAYMENT')}
+                className="btn-coral w-full py-3.5 text-sm flex items-center justify-center gap-2 shadow-lg shadow-rose-500/20"
               >
-                {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Processing payment...</span>
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="w-4 h-4" />
-                    <span>Pay ₹{totalPrice.toFixed(2)} Now</span>
-                  </>
-                )}
+                <QrCode className="w-4 h-4" />
+                <span>Scan UPI QR & Pay ₹{totalPrice.toFixed(2)}</span>
               </button>
             </div>
+          )}
+
+          {/* STEP: QR_PAYMENT — Mock UPI QR Code & Camera Scanner */}
+          {step === 'QR_PAYMENT' && (
+            <MockQrScanner
+              amount={totalPrice}
+              driverName={ride.driver_name}
+              bookingId={bookingData?.booking_id || ''}
+              route={`${ride.origin_stop_name} → ${ride.destination_stop_name}`}
+              secondsLeft={secondsLeft}
+              onPay={handlePayment}
+              onCancel={() => setStep('HOLDING')}
+              loading={loading}
+            />
           )}
 
           {/* STEP: CONFIRMED */}
