@@ -5,13 +5,13 @@ set -euo pipefail
 
 echo "=== [1/4] Installing backend dependencies ==="
 cd backend
-npm ci
+npm ci --include=dev
 npm run build
 cd ..
 
 echo "=== [2/4] Installing frontend dependencies ==="
 cd frontend
-npm ci
+npm ci --include=dev
 npm run build
 cd ..
 
