@@ -1,0 +1,34 @@
+# render.yaml — Render Blueprint for Campus Ride-Pooling
+# One-click deploy: https://render.com/deploy?repo=YOUR_GITHUB_URL
+
+databases:
+  - name: campus-rides-db
+    plan: free
+    databaseName: campus_rides
+    user: campus_admin
+
+services:
+  - type: web
+    name: campus-ride-pooling
+    runtime: node
+    plan: free
+    buildCommand: chmod +x render-build.sh && bash render-build.sh
+    startCommand: cd backend && node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: campus-rides-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: COLLEGE_EMAIL_DOMAIN
+        value: "@vitstudent.ac.in"
+      - key: HOLD_EXPIRY_SECONDS
+        value: "300"

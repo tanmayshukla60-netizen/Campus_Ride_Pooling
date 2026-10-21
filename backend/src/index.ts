@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import helmet from 'helmet';
 import cors from 'cors';
 import { config } from './config';
@@ -14,11 +15,17 @@ import { startHoldExpiryJob } from './jobs/holdExpiry.job';
 
 const app = express();
 
-// Security Middleware
-app.use(helmet());
+// Security Middleware — relax CSP in production to allow the React SPA
+app.use(
+  helmet({
+    contentSecurityPolicy: config.nodeEnv === 'production' ? false : undefined,
+  })
+);
 app.use(
   cors({
-    origin: [config.corsOrigin, 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
+    origin: config.corsOrigin === '*'
+      ? true
+      : [config.corsOrigin, 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:3000'],
     credentials: true,
   })
 );
@@ -64,6 +71,16 @@ app.use('/api/bookings', bookingsRoutes);
 
 app.use('/admin', adminRoutes);
 app.use('/api/admin', adminRoutes);
+
+// In production, serve the frontend build from ../frontend/dist
+if (config.nodeEnv === 'production') {
+  const frontendDist = path.join(__dirname, '../../frontend/dist');
+  app.use(express.static(frontendDist));
+  // Catch-all: serve index.html for client-side routing
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
 
 // Global Error Handler
 app.use(errorHandler);
