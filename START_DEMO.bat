@@ -6,11 +6,12 @@ echo ============================================================
 
 cd /d "c:\Users\Tanmay Shukla\Desktop\DBMS"
 
-REM 1. Clean stale pid if any and start PostgreSQL
+REM 1. Start PostgreSQL as an independent background daemon if not already running
 echo [1/4] Ensuring PostgreSQL database is running...
-powershell -ExecutionPolicy Bypass -Command "if (Test-Path \"$env:USERPROFILE\pgsql_data\postmaster.pid\") { Remove-Item \"$env:USERPROFILE\pgsql_data\postmaster.pid\" -Force }; & \"$env:USERPROFILE\pgsql\bin\pg_ctl.exe\" -D \"$env:USERPROFILE\pgsql_data\" -l \"$env:USERPROFILE\pgsql_data\server.log\" start"
+powershell -ExecutionPolicy Bypass -Command "$pg = Get-Process postgres -ErrorAction SilentlyContinue; if (-not $pg) { Start-Process -FilePath \"$env:USERPROFILE\pgsql\bin\postgres.exe\" -ArgumentList \"-D `\"$env:USERPROFILE\pgsql_data`\"\" -WindowStyle Hidden; Start-Sleep -Seconds 3 }"
 
-timeout /t 2 /nobreak >nul
+REM Wait for PostgreSQL port 5432 to be accepting connections
+powershell -ExecutionPolicy Bypass -Command "while (-not (Test-NetConnection -ComputerName 127.0.0.1 -Port 5432 -InformationLevel Quiet)) { Start-Sleep -Milliseconds 500 }"
 
 REM 2. Automatically refresh seed data with current timestamps
 echo [2/4] Generating fresh rides and bookings for right now...
