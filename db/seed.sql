@@ -23,7 +23,8 @@ INSERT INTO users (id, full_name, email, password_hash, role, rating_avg, rating
 ('22222222-2222-2222-2222-222222222207', 'Karthik Rajan', 'karthik.rajan2023@vitstudent.ac.in', '$2a$10$ZTw00uUoYPqNQb.j38FPLOEsnPHeKdIUV4fSUQYE9gr5u2.p6d4X6', 'DRIVER', 5.00, 2),
 ('22222222-2222-2222-2222-222222222208', 'Deepa Nair', 'deepa.nair2022@vitstudent.ac.in', '$2a$10$ZTw00uUoYPqNQb.j38FPLOEsnPHeKdIUV4fSUQYE9gr5u2.p6d4X6', 'RIDER', 4.60, 5),
 ('22222222-2222-2222-2222-222222222209', 'Siddharth Malhotra', 'siddharth.m2023@vitstudent.ac.in', '$2a$10$ZTw00uUoYPqNQb.j38FPLOEsnPHeKdIUV4fSUQYE9gr5u2.p6d4X6', 'DRIVER', 4.85, 4),
-('22222222-2222-2222-2222-222222222210', 'Pooja Reddy', 'pooja.reddy2024@vitstudent.ac.in', '$2a$10$ZTw00uUoYPqNQb.j38FPLOEsnPHeKdIUV4fSUQYE9gr5u2.p6d4X6', 'RIDER', 5.00, 1);
+('22222222-2222-2222-2222-222222222210', 'Pooja Reddy', 'pooja.reddy2024@vitstudent.ac.in', '$2a$10$ZTw00uUoYPqNQb.j38FPLOEsnPHeKdIUV4fSUQYE9gr5u2.p6d4X6', 'RIDER', 5.00, 1),
+('22222222-2222-2222-2222-222222222299', 'Ananya Iyer', 'ananyaiyer65@vitstudent.ac.in', '$2a$10$fjeDurXRMebngSPQaNXUa.zApfxB8A8au0dxcOtEfAVQmIUneACX.', 'DRIVER', 5.00, 2);
 
 -- ============================================================================
 -- 2. STOPS (9 stops)
@@ -62,6 +63,7 @@ INSERT INTO rides (id, driver_id, origin_stop_id, destination_stop_id, departure
 ('33333333-3333-3333-3333-333333333313', '22222222-2222-2222-2222-222222222203', 5, 1, NOW() + INTERVAL '6 hours', 4, 4, 60.00, 'SCHEDULED'),
 ('33333333-3333-3333-3333-333333333314', '22222222-2222-2222-2222-222222222204', 8, 3, NOW() + INTERVAL '1 day', 3, 3, 670.00, 'SCHEDULED'),
 ('33333333-3333-3333-3333-333333333315', '22222222-2222-2222-2222-222222222205', 9, 2, NOW() + INTERVAL '3 hours', 4, 4, 90.00, 'SCHEDULED'),
+('33333333-3333-3333-3333-333333333398', '22222222-2222-2222-2222-222222222299', 1, 2, NOW() + INTERVAL '3 hours', 3, 3, 120.00, 'SCHEDULED'),
 
 -- SPECIAL TEST RIDE: For Concurrency Stress Test (3 seats total, 3 available)
 ('33333333-3333-3333-3333-333333333399', '22222222-2222-2222-2222-222222222201', 1, 2, NOW() + INTERVAL '3 days', 3, 3, 150.00, 'SCHEDULED'),
