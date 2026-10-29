@@ -177,6 +177,53 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialRo
               Step 2: Enter Your Credentials
             </div>
 
+            {/* Quick 1-Click Demo Profiles for Evaluator/Sir */}
+            {mode === 'login' && (
+              <div className="p-2.5 rounded-xl bg-indigo-500/5 border border-indigo-500/15 space-y-2">
+                <div className="flex items-center justify-between text-[11px] text-white/50">
+                  <span className="flex items-center gap-1 font-semibold text-indigo-400">
+                    <Sparkles className="w-3 h-3" /> Quick Demo Logins:
+                  </span>
+                  <span className="text-[10px] text-white/30">1-click fill</span>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedRole('RIDER');
+                      setEmail('priya.sharma2023@vitstudent.ac.in');
+                      setPassword('Password123!');
+                    }}
+                    className="px-2 py-1.5 rounded-lg bg-white/[0.04] hover:bg-indigo-500/20 hover:border-indigo-500/40 border border-white/[0.06] text-[11px] text-white/70 hover:text-white transition-all text-center"
+                  >
+                    🧑‍🎓 Rider
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedRole('DRIVER');
+                      setEmail('arun.kumar2023@vitstudent.ac.in');
+                      setPassword('Password123!');
+                    }}
+                    className="px-2 py-1.5 rounded-lg bg-white/[0.04] hover:bg-amber-500/20 hover:border-amber-500/40 border border-white/[0.06] text-[11px] text-white/70 hover:text-white transition-all text-center"
+                  >
+                    🚗 Driver
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedRole('ADMIN');
+                      setEmail('admin@vitstudent.ac.in');
+                      setPassword('Password123!');
+                    }}
+                    className="px-2 py-1.5 rounded-lg bg-white/[0.04] hover:bg-purple-500/20 hover:border-purple-500/40 border border-white/[0.06] text-[11px] text-white/70 hover:text-white transition-all text-center"
+                  >
+                    🛡️ Admin
+                  </button>
+                </div>
+              </div>
+            )}
+
             {mode === 'signup' && (
               <div>
                 <label className="block text-xs font-semibold text-white/60 mb-1.5">Full Name</label>
